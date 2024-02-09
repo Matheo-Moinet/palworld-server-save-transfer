@@ -1,76 +1,85 @@
-# palworld-save-tools
-Tools for converting Palworld .sav files to JSON and back.
+# palworld-server-save-transfer
+Script for transfering Palworld saves between servers.
 
-This tool currently supports additional parsing of the following data in the `Level.sav` not handled by `uesave` or other non-Palworld aware Unreal save editors:
+Can be used to transfert from host game to dedicated server, or between two dedicated servers.
 
-1. `GroupSaveDataMap`
-    - Groups such as in-game organizations and guilds
-1. `CharacterSaveParameterMap`
-    - Characters such as players and pals
-1. `MapObjectSaveData.MapObjectSaveData.Model`
-1. `ItemContainerSaveData`
-1. `CharacterContainerSaveData`
-1. `DynamicItemSaveData`
-1. `FoliageGridSaveDataMap`
-1. `BaseCampSaveData`
-1. `WorkSaveData`
+As far as I tested it, this script also transfers guild informations.
 
-Some fields that are not currently parsed:
+Only uses python.
 
-1. `BaseCampSaveData.Value.ModuleMap`
-1. `MapObjectSaveData.MapObjectSaveData.ConcreteModel`
+### Credit
+I made this script to automate the long and tedious process described at [https://github.com/TKuk1aP/PalworldSaveShare].
 
-## Converting co-op saves to dedicated server saves
+I also used (and slightly modified) palworld-save-tools [https://github.com/cheahjs/palworld-save-tools].
 
-Please follow the instructions provided over at https://github.com/xNul/palworld-host-save-fix
+The following links also provided usefull informations [https://www.reddit.com/r/Palworld/comments/19cb8su], [https://github.com/xNul/palworld-host-save-fix]
 
-## Instructions
 
-> [!IMPORTANT]
-> Converting `Level.sav` files to JSON will result in very large files, and may require significant amounts of RAM to process. Use a modern text editor such as Visual Studio Code or a Jetbrains IDE to open these files.
+## How to use
 
-### Prerequisites
+### 0 - Download the script 
 
-1. Python 3.9 or newer.
-    - Windows users: You can install [Python 3.12 from the Microsoft Store](https://apps.microsoft.com/detail/9NCVDN91XZQP) or from [python.org](https://www.python.org/)
-
-### Windows GUI steps
-
-1. Download the latest release from [https://github.com/cheahjs/palworld-save-tools/releases/latest].
+1. Download the latest release from [https://github.com/Matheo-Moinet/palworld-server-save-transfer/releases/latest].
 1. Unzip the file into a folder.
-1. Drag and drop your `.sav` file (for Steam on Windows, these are located at `%LOCALAPPDATA%\Pal\Saved\SaveGames\<SteamID>\<SaveID>`) onto `convert.cmd` to convert the file into JSON.
-1. To convert the `.sav.json` file back into a `.sav` file, drag and drop your `.sav.json` file onto `convert.cmd`.
 
-> [!NOTE]
-> In the event that the `convert.cmd` fails to function correctly, try to disable Python's app execution aliases ("Manage app execution aliases"), or failing that, please use the [Terminal](#terminal) instructions below
+### 1 - Copy the world save
 
-### Terminal
+1. Copy the folder of the world save you wish to transfer in the folder named: `1_YOUR_WORLD_SAVE`
+   - For example, the folder with the name `4779E0844F461BA5218C5592A7D5007C`. If you do not know where your save folder is located, please visit the reddit link provided above for more info.
 
-1. Download the latest release from [https://github.com/cheahjs/palworld-save-tools/releases/latest].
-1. Unzip the file into a folder.
-1. Open a terminal in the folder you just unzipped.
-1. Depending on how Python is installed, the next steps should use either `python`, `python3`, or `py`.
-1. Run `python convert.py <path to .sav file>` to convert the `.sav` file to a `.sav.json` file.
-1. Run `python convert.py <path to .json file>` to convert the `.sav.json` file to a `.sav` file.
+### 2 - Gather the new player files
 
-> [!NOTE]
-> On Windows, you can drag and drop the `convert.py` file and the `.sav`/`.sav.json` file to avoid typing out the path.
+On palworld servers, each player is identified by the server using a `player_id`. When migrating servers, the `player_id` associated with each player can change. When it happens, if you try to connect to this world on your new server, you will be prompted to create a new character. This is because the server thinks you are a different player (even if your old player information is still there).
 
-Additional command line arguments:
+To explain it simply, this script corrects this by replacing your old `player_id` with your new `player_id` everywhere in the sav files. After this, the new server will still see you as having the new `player_id`, but now this `player_id` will be the one associated with your old data. This has to be done for every player whose `player_id` changed during the transfer. (Don't worry, its automated by the script)
 
-1. `--to-json`: Force SAV to JSON conversion regardless of file extension
-1. `--from-json`: Force JSON to SAV conversion regardless of file extension
-1. `--output`: Override the default output path
-1. `--minify-json`: Minify output JSON to help speed up processing by other tools consuming JSON
-1. `--force`: Overwrite output files if they exist without prompting
+Anyway, for this to work, we first have to find out the new `player_id` of each player on the server. This is done simply by having each player connect onto the new server.
+
+Here are the steps to do so:
+
+1. Shutdown the new server.
+1. Copy the same world save folder (as in step 1) into your new server world directory.
+   - The path should be looking like this `PalServer\Pal\Saved\SaveGames\0\`
+   - Make sure you also modify the `GameUserSettings.ini` file accordingly in `PalServer\Pal\Saved\Config\WindowsServer`. Refer to the reddit link for more information.
+1. Start the new server.
+2. Have every player you care about connect to the server.
+   1. If they have a different `player_id`, they will be asked to create a new character. This is normal. Please proceed to create this new character so that an associated .sav file is created.
+   2. > [!NOTE] This script has an option to automatically find which player is associated with which old and new `player_id`. However, this functionnality relies on the assumption that the old and new player names will be the same. If you wish to use this, please ask your players that the new character they create have **exactly** the same character name as the old one.
+1. Shutdown the new server.
+2. Copy back the world save folder with the new player saves from the new server to the `2_YOUR_SAVE_AFTER_JOIN` folder in the script folder.
 
 
-## Roadmap
+### 3 - Run the scripts
 
-- [] Parse all known blobs of data
-- [] Optimize CPU and memory usage
+1. Go into the `_Script_code` folder and open up a terminal.
+   - If you do not know how to do this, please refer to the reddit link.
+1. If you wish to automatically extract the old and new `player_id` for each player who connected to your server,
+   - run the following command : 
+        ```
+        python ./extract_players_ids <YOUR_WORLD_SAVE_NAME>
+        ```
+        where you replace `<YOUR_WORLD_SAVE_NAME>` by the name of the folder of your save. Eg: 
+        ```
+        python ./extract_players_ids 4779E0844F461BA5218C5592A7D5007C
+        ```
+   - The file `CONFIG.txt` should should now be pre-filed with the correct player ids.
+1. Otherwise, you can fill in the `CONFIG.txt` manually.
+2. Still into `_Script_code`,
+   - run the following command: 
+        ```
+        python ./transfer_save
+        ```
 
-## Development philosophy
+Et voila ! Your transfered save awaits you in `3_TRANSFERED_SAVE`.
 
-- No additional dependencies. Scripts should run with a default install of Python. Distributing binary builds of Python is laden with AV false positives.
-- Correctness of the conversion process is more important than performance. SAV > JSON > SAV should yield bit-for-bit identical files (pre-compression).
+### 4 - Copy the transfered save to your server
+  
+1. Shut down the new server.
+2. Delete the world save already located in your new server.
+3. Copy the transfered world save from `3_TRANSFERED_SAVE` to your new server (again, at `PalServer\Pal\Saved\SaveGames\0\`).
+4. Start the new server.
+
+
+If everything went well, every player should now be able to login and have everything exactly the same as on the old server.
+
+
