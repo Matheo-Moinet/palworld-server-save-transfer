@@ -8,7 +8,7 @@ As far as I tested it, this script also transfers guild informations.
 Only uses python.
 
 ### Credit
-I made this script to automate the long and tedious process described at [[https://github.com/TKuk1aP/PalworldSaveShare](https://gist.github.com/mojobojo/c9e1e3d05d074408ed4bd6fbe04e62ef)].
+I made this script to automate the long and tedious process described at [https://gist.github.com/mojobojo/c9e1e3d05d074408ed4bd6fbe04e62ef].
 
 I also used (and slightly modified) palworld-save-tools [https://github.com/cheahjs/palworld-save-tools].
 
