@@ -1,4 +1,4 @@
 Your world name goes next line:
-4779E0844F461BA5218C5592A7D5007C
+EXEMPLE-4779E0844F461BA5218C5592A7D5007C
 Your players info go on the next lines, with 1 player per line formated as follows: old_player_uid, new_player_uid, <optional> player name
 00000000000000000000000000000001,E1A27239000000000000000000000000,Kiamy

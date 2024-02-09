@@ -12,7 +12,7 @@ def main():
 
 	cleanInputFolderName = "1_YOUR_WORLD_SAVE"
 	afterJoinInputFolderName = "2_YOUR_SAVE_AFTER_JOIN"
-	outputFolderName = "3_FIXED_SAVE"
+	outputFolderName = "3_TRANSFERED_SAVE"
 
 	parser = argparse.ArgumentParser(
 		prog="palworld-save-tools",
