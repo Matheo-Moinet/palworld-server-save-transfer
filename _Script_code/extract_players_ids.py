@@ -7,7 +7,6 @@ import csv
 from lib.json_tools import CustomEncoder
 import convert
 
-
 def main():
 
 	cleanInputFolderName = "1_YOUR_WORLD_SAVE"
@@ -22,10 +21,17 @@ def main():
 		"world_folder_name",
 		help="Please specify the name of your world (copy the name of the folder)",
 		)
+	
+	parser.add_argument(
+		"--keep_incomplete_players",
+		"-k",
+		action="store_true",
+		help="Keep players for which only an old player_id was found (need to manually add the new player_id in CONFIG.txt file yourself)",
+		)
 	args = parser.parse_args()
 
-
 	world_name = args.world_folder_name
+	keep_incomplete_players = args.keep_incomplete_players
 
 	configFileName = "CONFIG.txt"
 	configPath = "../"+configFileName
@@ -82,6 +88,11 @@ def main():
 
 
 		current_str_index = level_join_json_string.find("\"players\":", current_str_index)
+
+	if not(keep_incomplete_players):
+		for player_name in list(found_players.keys()):
+			if ( found_players[player_name]['new']['player_uid'] == "NotFound" ):
+				found_players.pop(player_name)
 
 	print("Automaticaly extracted players :")
 	for player_name in found_players.keys():

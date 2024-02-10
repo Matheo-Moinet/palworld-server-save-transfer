@@ -1,7 +1,7 @@
 # palworld-server-save-transfer
 Script for transfering Palworld saves between servers.
 
-Can be used to transfert from host game to dedicated server, or between two dedicated servers.
+Can be used to transfert from host game to dedicated server, or between two dedicated servers (Windows->Linux, etc).
 
 As far as I tested it, this script also transfers guild informations.
 
@@ -33,20 +33,28 @@ On palworld servers, each player is identified by the server using a `player_id`
 
 To explain it simply, this script corrects this by replacing your old `player_id` with your new `player_id` everywhere in the sav files. After this, the new server will still see you as having the new `player_id`, but now this `player_id` will be the one associated with your old data. This has to be done for every player whose `player_id` changed during the transfer. (Don't worry, its automated by the script)
 
-Anyway, for this to work, we first have to find out the new `player_id` of each player on the server. This is done simply by having each player connect onto the new server.
+
+You first have to find out in which of the 3 following situations you are:
+
+1. (Host -> Dedicated with **same OS**) Only the host's `player_id` has changed, and every other player can connect like nothing happened (no new character creation screen for them).
+2. (Host/Dedicated -> Host/Dedicated with a **different OS**) Every player's `player_id` has changed, everyone is asked to create a new character upon login. This often happens when migrating from a host game to a paid dedicated server service, as most of them are running Linux and not Windows.
+3. (Dedicated -> Dedicated with the **same OS**) Every `player_id` should be the same so everyone should be able to connect without using this script. If not, you can still try to follow this guide.
+
+
+Now for the script to work, we need the new `player_id` of every player whose's `player_id` has changed. This is done simply by having each of these player connect onto the new server. In case N°1, only the host is required. In case N°2, every player need to connect onto the new server.
 
 Here are the steps to do so:
 
 1. Shutdown the new server.
-1. Copy the same world save folder (as in step 1) into your new server world directory.
+2. Copy the same world save folder (as in step 1) into your new server world directory.
    - The path should be looking like this `PalServer\Pal\Saved\SaveGames\0\`
    - Make sure you also modify the `GameUserSettings.ini` file accordingly in `PalServer\Pal\Saved\Config\WindowsServer`. Refer to the reddit link for more information.
-1. Start the new server.
-2. Have every player you care about connect to the server.
+3. Start the new server.
+4. Have every player you care about connect to the server. (In case N°1, only you. In case N°2, every player)
    1. If they have a different `player_id`, they will be asked to create a new character. This is normal. Please proceed to create this new character so that an associated .sav file is created.
    2. > [!NOTE] This script has an option to automatically find which player is associated with which old and new `player_id`. However, this functionnality relies on the assumption that the old and new player names will be the same. If you wish to use this, please ask your players that the new character they create have **exactly** the same character name as the old one.
-1. Shutdown the new server.
-2. Copy back the world save folder with the new player saves from the new server to the `2_YOUR_SAVE_AFTER_JOIN` folder in the script folder.
+5. Shutdown the new server.
+6. Copy back the world save folder with the new player saves from the new server to the `2_YOUR_SAVE_AFTER_JOIN` folder in the script folder.
 
 
 ### 3 - Run the scripts
