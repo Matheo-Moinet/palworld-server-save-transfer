@@ -51,8 +51,8 @@ Here are the steps to do so:
    - Make sure you also modify the `GameUserSettings.ini` file accordingly in `PalServer\Pal\Saved\Config\WindowsServer`. Refer to the reddit link for more information.
 3. Start the new server.
 4. Have every player you care about connect to the server. (In case N°1, only you. In case N°2, every player)
-   1. If they have a different `player_id`, they will be asked to create a new character. This is normal. Please proceed to create this new character so that an associated .sav file is created.
-   2. > [!NOTE] This script has an option to automatically find which player is associated with which old and new `player_id`. However, this functionnality relies on the assumption that the old and new player names will be the same. If you wish to use this, please ask your players that the new character they create have **exactly** the same character name as the old one.
+   - If they have a different `player_id`, they will be asked to create a new character. This is normal. Please proceed to create this new character so that an associated .sav file is created.
+   - This script has an option to automatically find which player is associated with which old and new `player_id`. However, this functionnality relies on the assumption that the old and new player names will be the same. If you wish to use this, please ask your players that the new character they create have **exactly** the same character name as the old one.
 5. Shutdown the new server.
 6. Copy back the world save folder with the new player saves from the new server to the `2_YOUR_SAVE_AFTER_JOIN` folder in the script folder.
 
