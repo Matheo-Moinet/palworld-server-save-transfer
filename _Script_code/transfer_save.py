@@ -33,6 +33,7 @@ def main():
 
 
     cleanInputPath = "../"+cleanInputFolderName+"/"+world_name+"/"
+    cleanInputPath_Player_Folder = "../"+cleanInputFolderName+"/"+world_name+"/Players/"
     joinInputPath = "../"+afterJoinInputFolderName+"/"+world_name+"/"
     joinInputPath_Player_Folder = "../"+afterJoinInputFolderName+"/"+world_name+"/Players/"
     outputPath_Level = "../"+outputFolderName+"/"+world_name+"/Level.sav"
@@ -50,7 +51,7 @@ def main():
         oldPlayerSav = player_ids[i][0]
         newPlayerSav = player_ids[i][1]
 
-        j_old = convert.read_and_convert_sav_to_json(joinInputPath_Player_Folder+oldPlayerSav+".sav")
+        j_old = convert.read_and_convert_sav_to_json(cleanInputPath_Player_Folder+oldPlayerSav+".sav")
         j_new = convert.read_and_convert_sav_to_json(joinInputPath_Player_Folder+newPlayerSav+".sav")
             
         oldPlayer_play_id = j_old["properties"]["SaveData"]["value"]["PlayerUId"]["value"]
